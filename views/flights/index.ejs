@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1>All Flights</h1>
+    <a href="/flights/new">ADD FLIGHT</a>
+
+
+    <% Object.keys(flightsByAirline).forEach(airline => { %>
+      <h2><%= airline %></h2>
+      <table class="flights-table">
+        <thead>
+          <tr>
+            <th>Airport</th>
+            <th>Flight Number</th>
+            <th>Departure Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% flightsByAirline[airline].forEach(flight => { %>
+            <tr>
+              <td><%= flight.airport %></td>
+              <td><%= flight.flightNo %></td>
+              <td><%= flight.departs.toISOString().split('T')[0] %></td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% }) %>
+
+    <a href="/">Back to Home</a>
+
+
+    </ul>
+  </body>
+</html>
+

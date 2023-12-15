@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <title>Document</title>
+</head>
+<body>
+  <h1>Add Flights</h1>
+  <a href="/flights">ALL FLIGHTS</a>
+
+  <form action="/flights" method="post">
+    <div class="form-group">
+      <label for="airline">Airline:</label>
+      <select id="airline" name="airline" required>
+        <option value="">Select an Airline</option>
+        <option value="Delta">Delta</option>
+        <option value="Southwest">Southwest</option>
+        <option value="United">United</option>
+        <option value="American">American</option>
+        <option value="International">International</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="airport">Airport:</label>
+      <select id="airport" name="airport" required>
+        <option value="">Select an Airport</option>
+        <option value="AUS">AUS</option>
+        <option value="BWI">BWI</option>
+        <option value="DEN">DEN</option>
+        <option value="LAX">LAX</option>
+        <option value="CLI">CLI</option>
+      </select>
+    </div>
+
+
+  <form action="/flights" method="post" class="flight-form">
+   
+    <div class="form-group">
+      <label for="flightNo">Flight Number:</label>
+      <input type="number" id="flightNo" name="flightNo" required>
+    </div>
+    <div class="form-group">
+      <label for="departs">Departure Date:</label>
+      <input type="date" id="departs" name="departs">
+    </div>
+    <button type="submit" class="submit-btn">Add Flight</button>
+  </form>
+  
+
+<a href="/">Back to Home</a>
+
+
+
+</body>
+</html>
+
+
