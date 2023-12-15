@@ -1,35 +1,6 @@
+const Flight = require('../models/flight');
 
-const Flight = require('../models/flight');//....
-//const Flight = require('../models/flight');
-
-exports.createFlight = async (req, res) => {
-  try {
-    const newFlight = new Flight({
-      airline: 'United',
-      airport: 'LAX',
-      flightNo: 1234,
-      // departs is optional due to default
-    });
-    await newFlight.save();
-    // handle success
-  } catch (err) {
-    // handle error
-  }
-};
-
-// controllers/flights.js
-
-exports.index = async (req, res) => {
-  try {
-    const flights = await Flight.find();
-    res.render('flights/index', { flights });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error retrieving flights');
-  }
-};
-
-
+// This function will list all flights grouped by airline
 exports.index = async (req, res) => {
   try {
     const flights = await Flight.find();
@@ -48,31 +19,45 @@ exports.index = async (req, res) => {
   }
 };
 
-
-exports.getAllFlights = async (req, res) => {
-  try {
-    const flights = await Flight.find();
-    // Now, flights contain all the documents from the database
-    // You can send this data back as a response or render a view
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error retrieving flights');
-  }
-};
-
-
-
+// ADD a new flight to form
 exports.new = (req, res) => {
   res.render('flights/new');
 };
+
+// CREATE a new flight and redirect 
 exports.createFlight = async (req, res) => {
   try {
     const newFlight = new Flight(req.body);
     await newFlight.save();
-    res.redirect('/flights');
+    res.redirect('/flights'); 
   } catch (err) {
     console.error(err);
     res.status(500).send('Error saving the flight');
   }
 };
+//destination 
+exports.addDestination = async (req, res) => {
+  try {
+    const flight = await Flight.findById(req.params.id);
+    flight.destinations.push(req.body); 
+    await flight.save();
+    res.redirect(`/flights/${flight._id}`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error adding destination');
+  }
+};
+
+
+//render show veiw 
+exports.show = async (req, res) => {
+  try {
+    const flight = await Flight.findById(req.params.id).populate('destinations');
+    res.render('flights/show', { flight });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error retrieving flight details');
+  }
+};
+
 

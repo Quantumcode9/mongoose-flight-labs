@@ -1,0 +1,27 @@
+<h1>Flight Details</h1>
+<p>Airline: <%= flight.airline %></p>
+<p>Flight No: <%= flight.flightNo %></p>
+<p>Departure: <%= flight.departs %></p>
+<p>Airport: <%= flight.airport %></p>
+
+<h2>Destinations</h2>
+<ul>
+  <% flight.destinations.sort((a, b) => new Date(a.arrival) - new Date(b.arrival)).forEach(destination => { %>
+    <li>
+      Airport: <%= destination.airport %>, Arrival: <%= destination.arrival %>
+    </li>
+  <% }) %>
+</ul>
+
+<!-- add a new destination -->
+<form action="/flights/<%= flight._id %>/destinations" method="post">
+</form>
+
+<select name="airport" required>
+    <% const usedAirports = flight.destinations.map(dest => dest.airport); %>
+    <% ['AUS', 'DFW', 'DEN', 'LAX', 'SAN', 'BWI', 'CLI'].forEach(airport => { %>
+      <% if (!usedAirports.includes(airport) && flight.airport !== airport) { %>
+        <option value="<%= airport %>"><%= airport %></option>
+      <% } %>
+    <% }) %>
+  </select>

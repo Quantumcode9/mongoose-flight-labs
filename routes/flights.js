@@ -8,7 +8,14 @@ router.get('/', flightsController.index);
 // add a new flight
 router.get('/new', flightsController.new); 
 
+// show veiw
+router.get('/:id', flightsController.show); 
+
+// Add destination
+router.post('/:id/destinations', flightsController.addDestination); 
+
 // creation of a flight
 router.post('/', flightsController.createFlight); 
+
 
 module.exports = router;

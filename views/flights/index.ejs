@@ -6,8 +6,7 @@
   <body>
     <h1>All Flights</h1>
     <a href="/flights/new">ADD FLIGHT</a>
-
-
+    
     <% Object.keys(flightsByAirline).forEach(airline => { %>
       <h2><%= airline %></h2>
       <table class="flights-table">
@@ -16,6 +15,7 @@
             <th>Airport</th>
             <th>Flight Number</th>
             <th>Departure Date</th>
+            <th>Details</th>
           </tr>
         </thead>
         <tbody>
@@ -24,14 +24,15 @@
               <td><%= flight.airport %></td>
               <td><%= flight.flightNo %></td>
               <td><%= flight.departs.toISOString().split('T')[0] %></td>
+              <td><a href="/flights/<%= flight._id %>">Detail</a></td>
             </tr>
           <% }) %>
         </tbody>
       </table>
     <% }) %>
-
+    
     <a href="/">Back to Home</a>
-
+    
 
     </ul>
   </body>
