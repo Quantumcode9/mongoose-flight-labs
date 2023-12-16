@@ -23,7 +23,7 @@
             <tr>
               <td><%= flight.airport %></td>
               <td><%= flight.flightNo %></td>
-              <td><%= flight.departs.toISOString().split('T')[0] %></td>
+              <td><%= flight.departs %></td>
               <td><a href="/flights/<%= flight._id %>">Detail</a></td>
             </tr>
           <% }) %>
@@ -32,9 +32,5 @@
     <% }) %>
     
     <a href="/">Back to Home</a>
-    
-
-    </ul>
   </body>
 </html>
-
