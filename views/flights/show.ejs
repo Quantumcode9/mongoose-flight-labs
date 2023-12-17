@@ -6,9 +6,9 @@
 
 <h2>Destinations</h2>
 <ul>
-  <% flight.destinations.sort((a, b) => new Date(a.arrival) - new Date(b.arrival)).forEach(destination => { %>
+  <% flight.destinations.forEach(destination => { %>
     <li>
-      Airport: <%= destination.airport %>, Arrival: <%= destination.arrival %>
+      Airport: <%= destination.airport %>, Arrival: <%= destination.arrival.toISOString().split('T')[0] %>
     </li>
   <% }) %>
 </ul>
@@ -16,6 +16,10 @@
 <!-- add a new destination -->
 <form action="/flights/<%= flight._id %>/destinations" method="post">
 </form>
+<form action="/flights/<%= flight._id %>/destinations" method="post">
+</form>
+
+
 
 <select name="airport" required>
     <% const usedAirports = flight.destinations.map(dest => dest.airport); %>
@@ -25,3 +29,61 @@
       <% } %>
     <% }) %>
   </select>
+<div>
+  <label for="arrival">Arrival:</label>
+  <input type="date" id="arrival" name="arrival" required>
+</div>
+
+  <button type="submit">Add Destination</button>
+
+  <a href="/flights">Back to All Flights</a>
+
+
+<h2>Destinations</h2>
+<ul>
+  <% flight.destinations.sort((a, b) => new Date(a.arrival) - new Date(b.arrival)).forEach(destination => { %>
+    <li>
+      Airport: <%= destination.airport %>, Arrival: <%= destination.arrival.toISOString().split('T')[0] %>
+    </li>
+  <% }) %>
+</ul>
+
+<h1>Flight Details: <%= flight.airline %> - Flight No: <%= flight.flightNo %></h1>
+
+<!-- ... other details about the flight ... -->
+
+<!-- Form to add a new destination to this flight -->
+<h2>Add New Destination</h2>
+<form action="/flights/<%= flight._id %>/destinations" method="post">
+  <div>
+    <label for="airport">Destination Airport:</label>
+    <select id="airport" name="airport" required>
+      <option value="AUS">AUS</option>
+      <option value="DFW">DFW</option>
+      <option value="DEN">DEN</option>
+      <option value="LAX">LAX</option>
+      <option value="SAN">SAN</option>
+      <option value="BWI">BWI</option>
+      <option value="CLI">CLI</option>
+      <!-- Add other airport options as needed -->
+    </select>
+  </div>
+  <div>
+    <label for="arrival">Arrival Date and Time:</label>
+    <input type="datetime-local" id="arrival" name="arrival" required>
+  </div>
+  <button type="submit">Add Destination</button>
+</form>
+
+<h2>Destinations</h2>
+<ul>
+  <% 
+    flight.destinations
+      .sort((a, b) => new Date(a.arrival) - new Date(b.arrival))
+      .forEach(destination => {
+  %>
+    <li>
+      Airport: <%= destination.airport %>, Arrival: <%= new Date(destination.arrival).toISOString().split('T')[0] %>
+    </li>
+  <% }) %>
+</ul>

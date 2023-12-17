@@ -18,4 +18,7 @@ router.post('/:id/destinations', flightsController.addDestination);
 router.post('/', flightsController.createFlight); 
 
 
+
+
+
 module.exports = router;

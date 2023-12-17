@@ -1,4 +1,5 @@
 const Flight = require('../models/flight');
+const Destination = require('../models/destination');
 
 // This function will list all flights grouped by airline
 exports.index = async (req, res) => {
@@ -17,7 +18,22 @@ exports.index = async (req, res) => {
     console.error(err);
     res.status(500).send('Error retrieving flights');
   }
+}
+exports.getFlights = (req, res) => {
+  const flightId = req.params.id;
+
+  Flight.findById(flightId)
+    .populate('destinations')
+    .exec(function(err, flight) {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error retrieving flight');
+      } else {
+        res.render('flight/show', { flight });
+      }
+    });
 };
+
 
 // ADD a new flight to form
 exports.new = (req, res) => {
@@ -35,12 +51,26 @@ exports.createFlight = async (req, res) => {
     res.status(500).send('Error saving the flight');
   }
 };
-//destination 
+
 exports.addDestination = async (req, res) => {
   try {
-    const flight = await Flight.findById(req.params.id);
-    flight.destinations.push(req.body); 
+    // Create a new Destination document
+    const destination = new Destination({
+      airport: req.body.airport,
+      arrival: new Date(req.body.arrival) 
+    });
+    await destination.save();
+
+    // Find the flight and add the destination's ObjectId
+    // 
+    const flight = await Flight.findOne({ flightNumber: req.params.flightNumber });
+    if (!flight) {
+      return res.status(404).send('Flight not found');
+    }
+
+    flight.destinations.push(destination._id);
     await flight.save();
+
     res.redirect(`/flights/${flight._id}`);
   } catch (err) {
     console.error(err);
@@ -49,10 +79,12 @@ exports.addDestination = async (req, res) => {
 };
 
 
-//render show veiw 
 exports.show = async (req, res) => {
   try {
     const flight = await Flight.findById(req.params.id).populate('destinations');
+    if (!flight) {
+      return res.status(404).send('Flight not found');
+    }
     res.render('flights/show', { flight });
   } catch (err) {
     console.error(err);
@@ -61,3 +93,28 @@ exports.show = async (req, res) => {
 };
 
 
+// //render show veiw 
+// exports.show = async (req, res) => {
+//   try {
+//     const flight = await Flight.findById(req.params.id).populate('destinations');
+//     res.render('flights/show', { flight });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send('Error retrieving flight details');
+//   }
+// };
+
+
+
+// exports.show = async (req, res) => {
+//   try {
+//     const flight = await Flight.findById(req.params.id); // Add .populate('destinations') if they are referenced
+//     if (!flight) {
+//       return res.status(404).send('Flight not found');
+//     }
+//     res.render('flights/show', { flight });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).send('Error retrieving flight details');
+//   }
+// };
