@@ -92,6 +92,15 @@ exports.show = async (req, res) => {
   }
 };
 
+exports.show = async function(req, res) {
+  try {
+    const flight = await Flight.findOne({ flightNumber: req.params.flightNumber }).populate('destinations');
+    res.render('flights/show', { flight: flight });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Error retrieving flight details');
+  }
+};
 
 // //render show veiw 
 // exports.show = async (req, res) => {

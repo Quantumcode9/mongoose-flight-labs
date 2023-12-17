@@ -87,3 +87,10 @@
     </li>
   <% }) %>
 </ul>
+
+  <ul>
+  <% flight.destinations.forEach(function(destination) { %>
+    <li><%= destination.airport %> - <%= destination.arrival.toISOString().substring(0, 16) %></li>
+  <% }); %>
+</ul>
+
