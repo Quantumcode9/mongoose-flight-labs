@@ -1,5 +1,6 @@
 const Flight = require('../models/flight');
 const Destination = require('../models/destination');
+const Ticket = require('../models/flight');
 
 // This function will list all flights grouped by airline
 exports.index = async (req, res) => {
@@ -49,6 +50,11 @@ exports.new = (req, res) => {
 // CREATE a new flight and redirect 
 exports.createFlight = async (req, res) => {
   try {
+    // Check if flightNo is provided
+    if (!req.body.flightNo) {
+      return res.status(400).send('flightNo is required');
+    }
+
     const newFlight = new Flight(req.body);
     await newFlight.save();
     res.redirect('/flights'); 
@@ -100,19 +106,31 @@ exports.show = async function(req, res) {
   }
 };
 
-// Add a ticket to a flight
-exports.addTicket = async (req, res) => {
+exports.newTicketForm = async (req, res) => {
   try {
-    const flight = await Flight.findById(req.params.flightId);
+    const flight = await Flight.findById(req.params.id);
+    if (!flight) {
+      return res.status(404).send('Flight not found');
+    }
+    res.render('tickets/new', { flight });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error displaying new ticket form');
+  }
+};
+
+
+exports.create = async (req, res) => {
+  try {
+    const flight = await Flight.findById(req.params.id);
     if (!flight) {
       return res.status(404).send('Flight not found');
     }
     const newTicket = new Ticket({
       ...req.body,
-      flight: flight._id
+      flight: flight._id // Add flight property here
     });
     await newTicket.save();
-
     res.redirect(`/flights/${flight._id}`);
   } catch (err) {
     console.error(err);

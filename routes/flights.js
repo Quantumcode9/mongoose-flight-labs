@@ -12,6 +12,8 @@ router.get('/new', flightsController.new);
 // show veiw
 router.get('/:id', flightsController.show); 
 
+router.get('/:id/tickets/new', flightsController.newTicketForm);
+
 // Add destination
 router.post('/:id/destinations', flightsController.addDestination); 
 
@@ -20,10 +22,7 @@ router.post('/', flightsController.createFlight);
 
 router.post('/:id/destinations', flightsController.addDestination);
 
-router.post('/:id/tickets', flightsController.addTicket);
-
-
-
+router.post('/:flightId/tickets', flightsController.create);
 
 
 

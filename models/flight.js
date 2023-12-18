@@ -13,11 +13,6 @@ const ticketSchema = new mongoose.Schema({
     min: 0, 
     required: true
   },
-  flight: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Flight', 
-    required: true
-  }
 });
 
 const Ticket = mongoose.model('Ticket', ticketSchema);
