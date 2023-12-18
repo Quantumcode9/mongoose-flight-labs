@@ -1,8 +1,42 @@
+const mongoose = require('mongoose');
 const Flight = require('../models/flight');
 const Destination = require('../models/destination');
-const Ticket = require('../models/flight');
 
-// This function will list all flights grouped by airline
+
+
+exports.newTicketForm = async (req, res) => {
+  try {
+    const flight = await Flight.findById(req.params.id);
+    if (!flight) {
+      return res.status(404).send('Flight not found');
+    }
+    res.render('tickets/new', { flight });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error displaying new ticket form');
+  }
+};
+
+exports.createTicket = async (req, res) => {
+  try {
+    const flight = await Flight.findById(req.params.id);
+    if (!flight) {
+      return res.status(404).send('Flight not found');
+    }
+
+    flight.tickets.push(req.body);
+    await flight.save();
+
+    res.redirect(`/flights/${flight._id}`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error creating ticket');
+  }
+};
+
+
+
+// list all flights grouped by airline
 exports.index = async (req, res) => {
   try {
     const flights = await Flight.find();
@@ -19,27 +53,7 @@ exports.index = async (req, res) => {
     console.error(err);
     res.status(500).send('Error retrieving flights');
   }
-}
-
-// list all flights grouped by airline
-exports.getFlights = async function(req, res) {
-  try {
-    const flights = await Flight.find({});
-    const flightsByAirline = flights.reduce((obj, flight) => {
-      const airline = flight.airline;
-      if (!obj[airline]) {
-        obj[airline] = [];
-      }
-      obj[airline].push(flight);
-      return obj;
-    }, {});
-    res.render('flights/index', { flightsByAirline });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error getting flights');
-  }
 };
-
 
 
 // ADD a new flight to form
@@ -106,34 +120,4 @@ exports.show = async function(req, res) {
   }
 };
 
-exports.newTicketForm = async (req, res) => {
-  try {
-    const flight = await Flight.findById(req.params.id);
-    if (!flight) {
-      return res.status(404).send('Flight not found');
-    }
-    res.render('tickets/new', { flight });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error displaying new ticket form');
-  }
-};
 
-
-exports.create = async (req, res) => {
-  try {
-    const flight = await Flight.findById(req.params.id);
-    if (!flight) {
-      return res.status(404).send('Flight not found');
-    }
-    const newTicket = new Ticket({
-      ...req.body,
-      flight: flight._id // Add flight property here
-    });
-    await newTicket.save();
-    res.redirect(`/flights/${flight._id}`);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error creating ticket');
-  }
-};

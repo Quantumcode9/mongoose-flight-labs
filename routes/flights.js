@@ -20,10 +20,7 @@ router.post('/:id/destinations', flightsController.addDestination);
 // creation of a flight
 router.post('/', flightsController.createFlight); 
 
-router.post('/:id/destinations', flightsController.addDestination);
-
-router.post('/:flightId/tickets', flightsController.create);
-
+router.post('/flights/:id/tickets', flightsController.createTicket);
 
 
 

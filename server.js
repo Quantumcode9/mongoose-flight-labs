@@ -2,6 +2,7 @@ const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
 const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
 const logger = require('morgan');
 require('dotenv').config();
 const mongoose = require('mongoose');
@@ -24,6 +25,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 
 // Routes
@@ -36,15 +39,17 @@ const destinationsRouter = require('./routes/destinations');
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/flights', flightsRouter);
-app.use('/flights', destinationsRouter);
+app.use('/destinations', destinationsRouter);
+
+
 
 // flight model
 const Flight = require('./models/flight');
 
 
 // Route handler
-app.get('/flights/:flightNo', function(req, res) {
-  Flight.findOne({ flightNo: req.params.flightNo }, function(err, flight) {
+app.get('/flights/:flightId', function(req, res) {
+  Flight.findById(req.params.flightId, function(err, flight) {
     if (err) {
       console.error(err);
       res.redirect('/flights');
@@ -54,14 +59,14 @@ app.get('/flights/:flightNo', function(req, res) {
   });
 });
 
-app.put('/flights/:flightNo', function(req, res) {
+app.put('/flights/:flightId', function(req, res) {
   var updatedData = req.body;
-  Flight.findOneAndUpdate({ flightNo: req.params.flightNo }, updatedData, { new: true }, function(err, flight) {
+  Flight.findByIdAndUpdate(req.params.flightId, updatedData, { new: true }, function(err, flight) {
     if (err) {
       console.error(err);
       res.redirect('/flights');
     } else {
-      res.redirect('/flights/' + flight.flightNo);
+      res.redirect('/flights/' + flight._id);
     }
   });
 });

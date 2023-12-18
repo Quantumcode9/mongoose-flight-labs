@@ -1,5 +1,17 @@
 
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <title>Document</title>
+</head>
+<body>
+
+
+
 <!-- add a new destination -->
 
 
@@ -40,7 +52,7 @@
   <button type="submit">Add Destination</button>
 </form>
 
-<h2>Destinations</h2>
+<h2>Current Destinations</h2>
 
 <ul>
   <% 
@@ -55,9 +67,9 @@
 <br>
 <br>
 <h1>Create A Ticket</h1>
-<a href="/flights/<%= flight._id %>/tickets/new" class="btn">New Ticket</a>
-
-<h2>Current Tickets:</h2>
+<button><a href="/flights/<%= flight._id %>/tickets/new" class="btn">New Ticket</a></button>
+<br>
+<h2>Current Tickets</h2>
 <% if (flight.tickets && flight.tickets.length > 0) { %>
   <ul>
     <% flight.tickets.forEach(ticket => { %>
@@ -68,4 +80,8 @@
   <p>No tickets booked for this flight yet.</p>
 <% } %>
 
+
+</body>
+
+</html>
 
