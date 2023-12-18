@@ -7,24 +7,24 @@ const destinationsController = require('../controllers/destinations');
 
 // list all flights
 
-router.get('/new', destinationsController.new);
+// router.get('/', destinationsController.index);
 
-router.get('/', destinationsController.index);
-
-router.get('/:id', destinationsController.show);
+// router.get('/:id', destinationsController.show);
 
 
-router.delete('/:id', destinationsController.deleteDestination);
+// router.delete('/:id', destinationsController.deleteDestination);
 
-router.get('/:id/edit', destinationsController.editDestination);
+// router.get('/:id/edit', destinationsController.editDestination);
 
-router.put('/:id', destinationsController.updateDestination);
+// router.put('/:id', destinationsController.updateDestination);
 
-router.post('/', destinationsController.createDestination);
+// router.post('/', destinationsController.createDestination);
 
 // router.post('/flights/:flightId/destinations', destinationsController.addDestinationToFlight);
 
 router.post('/flights/:flightNumber/destinations', destinationsController.addDestination);
+
+// router.delete('/flights/:flightNumber/destinations/:destinationId', destinationsController.removeDestination);
 
 
 module.exports = router;

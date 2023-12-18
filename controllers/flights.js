@@ -19,20 +19,24 @@ exports.index = async (req, res) => {
     res.status(500).send('Error retrieving flights');
   }
 }
-exports.getFlights = (req, res) => {
-  const flightId = req.params.id;
-
-  Flight.findById(flightId)
-    .populate('destinations')
-    .exec(function(err, flight) {
-      if (err) {
-        console.error(err);
-        res.status(500).send('Error retrieving flight');
-      } else {
-        res.render('flight/show', { flight });
+exports.getFlights = async function(req, res) {
+  try {
+    const flights = await Flight.find({});
+    const flightsByAirline = flights.reduce((obj, flight) => {
+      const airline = flight.airline;
+      if (!obj[airline]) {
+        obj[airline] = [];
       }
-    });
+      obj[airline].push(flight);
+      return obj;
+    }, {});
+    res.render('flights/index', { flightsByAirline });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error getting flights');
+  }
 };
+
 
 
 // ADD a new flight to form
@@ -63,7 +67,7 @@ exports.addDestination = async (req, res) => {
 
     // Find the flight and add the destination's ObjectId
     // 
-    const flight = await Flight.findOne({ flightNumber: req.params.flightNumber });
+    const flight = await Flight.findById(req.params.id);
     if (!flight) {
       return res.status(404).send('Flight not found');
     }
@@ -79,51 +83,15 @@ exports.addDestination = async (req, res) => {
 };
 
 
-exports.show = async (req, res) => {
+exports.show = async function(req, res) {
   try {
     const flight = await Flight.findById(req.params.id).populate('destinations');
     if (!flight) {
       return res.status(404).send('Flight not found');
     }
-    res.render('flights/show', { flight });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Error retrieving flight details');
-  }
-};
-
-exports.show = async function(req, res) {
-  try {
-    const flight = await Flight.findOne({ flightNumber: req.params.flightNumber }).populate('destinations');
     res.render('flights/show', { flight: flight });
   } catch (err) {
     console.log(err);
     res.status(500).send('Error retrieving flight details');
   }
 };
-
-// //render show veiw 
-// exports.show = async (req, res) => {
-//   try {
-//     const flight = await Flight.findById(req.params.id).populate('destinations');
-//     res.render('flights/show', { flight });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send('Error retrieving flight details');
-//   }
-// };
-
-
-
-// exports.show = async (req, res) => {
-//   try {
-//     const flight = await Flight.findById(req.params.id); // Add .populate('destinations') if they are referenced
-//     if (!flight) {
-//       return res.status(404).send('Flight not found');
-//     }
-//     res.render('flights/show', { flight });
-//   } catch (err) {
-//     console.error(err);
-//     res.status(500).send('Error retrieving flight details');
-//   }
-// };
