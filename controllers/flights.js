@@ -19,6 +19,8 @@ exports.index = async (req, res) => {
     res.status(500).send('Error retrieving flights');
   }
 }
+
+// list all flights grouped by airline
 exports.getFlights = async function(req, res) {
   try {
     const flights = await Flight.find({});
@@ -56,6 +58,7 @@ exports.createFlight = async (req, res) => {
   }
 };
 
+// ADD a destination to a flight
 exports.addDestination = async (req, res) => {
   try {
     // Create a new Destination document
@@ -82,10 +85,11 @@ exports.addDestination = async (req, res) => {
   }
 };
 
+// SHOW a flight's details
 
 exports.show = async function(req, res) {
   try {
-    const flight = await Flight.findById(req.params.id).populate('destinations');
+    const flight = await Flight.findById(req.params.id).populate('destinations').populate('tickets');;
     if (!flight) {
       return res.status(404).send('Flight not found');
     }
@@ -93,5 +97,25 @@ exports.show = async function(req, res) {
   } catch (err) {
     console.log(err);
     res.status(500).send('Error retrieving flight details');
+  }
+};
+
+// Add a ticket to a flight
+exports.addTicket = async (req, res) => {
+  try {
+    const flight = await Flight.findById(req.params.flightId);
+    if (!flight) {
+      return res.status(404).send('Flight not found');
+    }
+    const newTicket = new Ticket({
+      ...req.body,
+      flight: flight._id
+    });
+    await newTicket.save();
+
+    res.redirect(`/flights/${flight._id}`);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Error creating ticket');
   }
 };

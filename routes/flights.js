@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const flightsController = require('../controllers/flights');
 
+
 // list all flights
 router.get('/', flightsController.index); 
 
@@ -18,6 +19,10 @@ router.post('/:id/destinations', flightsController.addDestination);
 router.post('/', flightsController.createFlight); 
 
 router.post('/:id/destinations', flightsController.addDestination);
+
+router.post('/:id/tickets', flightsController.addTicket);
+
+
 
 
 

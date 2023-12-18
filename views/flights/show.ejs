@@ -52,5 +52,20 @@
   <% }); %>
 </ul>
 
+<br>
+<br>
+<h1>Create A Ticket</h1>
+<a href="/flights/<%= flight._id %>/tickets/new" class="btn">New Ticket</a>
+
+<h2>Current Tickets:</h2>
+<% if (flight.tickets && flight.tickets.length > 0) { %>
+  <ul>
+    <% flight.tickets.forEach(ticket => { %>
+      <li>Seat: <%= ticket.seat %>, Price: $<%= ticket.price.toFixed(2) %></li>
+    <% }) %>
+  </ul>
+<% } else { %>
+  <p>No tickets booked for this flight yet.</p>
+<% } %>
 
 
